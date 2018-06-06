@@ -4,6 +4,10 @@ public class Player : MonoBehaviour {
 
     public float speed = 150f;
     public Vector2 maxVelocity = new Vector2(60, 100);
+    public float jetSpeed = 200f;
+    public float airSpeedMultipleyer = .3f;
+    public bool standing;
+    public float standingThreshold = 4f;
 
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer spriteRenderer;
@@ -18,6 +22,17 @@ public class Player : MonoBehaviour {
 	void Update () {
 
         float absVelocityX = Mathf.Abs(rigidbody2d.velocity.x);
+        float absVelocityY = Mathf.Abs(rigidbody2d.velocity.y);
+
+        if (absVelocityY <= standingThreshold)
+        {
+            standing = true;
+        }
+        else
+        {
+            standing = false;
+        }
+
 
         float forceX = 0f;
         float forceY = 0f;
@@ -26,7 +41,7 @@ public class Player : MonoBehaviour {
         {
             if (absVelocityX < maxVelocity.x)
             {
-                forceX = speed;
+                forceX = standing ? speed : (speed * airSpeedMultipleyer);
             }
             spriteRenderer.flipX = false;
         }
@@ -34,9 +49,17 @@ public class Player : MonoBehaviour {
         {
             if (absVelocityX < maxVelocity.x)
             {
-                forceX = -speed;
+                forceX = standing ? -speed : (-speed * airSpeedMultipleyer);
             }
             spriteRenderer.flipX = true;
+        }
+
+        if (Input.GetKey("up"))
+        {
+            if (absVelocityY < maxVelocity.y)
+            {
+                forceY = jetSpeed;
+            }
         }
 
         rigidbody2d.AddForce(new Vector2(forceX, forceY));
