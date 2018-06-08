@@ -12,11 +12,13 @@ public class Player : MonoBehaviour {
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer spriteRenderer;
     private PlayerController playerController;
+    private Animator animator;
 
 	private void Awake()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -51,15 +53,26 @@ public class Player : MonoBehaviour {
                 forceX = standing ? newSpeed : (newSpeed * airSpeedMultipleyer);
                 spriteRenderer.flipX = forceX < 0;
             }
+            animator.SetInteger("AnimState", 1);
         }
-        
+        else
+        {
+            animator.SetInteger("AnimState", 0);
+        }
+
         if (playerController.moving.y != 0)
         {
             if (absVelocityY < maxVelocity.y)
             {
                 forceY = jetSpeed * playerController.moving.y;
             }
+            animator.SetInteger("AnimState", 2);
         }
+        else if (absVelocityY > 0 && !standing)
+        {
+            animator.SetInteger("AnimState", 3);
+        }
+        
 
         rigidbody2d.AddForce(new Vector2(forceX, forceY));
 	}
