@@ -11,15 +11,21 @@ public class Player : MonoBehaviour {
 
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer spriteRenderer;
+    private PlayerController playerController;
 
 	private void Awake()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+        playerController = GetComponent<PlayerController>();
+    }
+
+    // Update is called once per frame
+    void Update () {
 
         float absVelocityX = Mathf.Abs(rigidbody2d.velocity.x);
         float absVelocityY = Mathf.Abs(rigidbody2d.velocity.y);
@@ -37,32 +43,24 @@ public class Player : MonoBehaviour {
         float forceX = 0f;
         float forceY = 0f;
 
-        if (Input.GetKey("right"))
+        if (playerController.moving.x != 0)
         {
             if (absVelocityX < maxVelocity.x)
             {
-                forceX = standing ? speed : (speed * airSpeedMultipleyer);
+                float newSpeed = speed * playerController.moving.x;
+                forceX = standing ? newSpeed : (newSpeed * airSpeedMultipleyer);
+                spriteRenderer.flipX = forceX < 0;
             }
-            spriteRenderer.flipX = false;
         }
-        else if (Input.GetKey("left"))   
-        {
-            if (absVelocityX < maxVelocity.x)
-            {
-                forceX = standing ? -speed : (-speed * airSpeedMultipleyer);
-            }
-            spriteRenderer.flipX = true;
-        }
-
-        if (Input.GetKey("up"))
+        
+        if (playerController.moving.y != 0)
         {
             if (absVelocityY < maxVelocity.y)
             {
-                forceY = jetSpeed;
+                forceY = jetSpeed * playerController.moving.y;
             }
         }
 
         rigidbody2d.AddForce(new Vector2(forceX, forceY));
-
 	}
 }
