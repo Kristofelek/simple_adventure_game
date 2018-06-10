@@ -15,6 +15,11 @@ public class LookForward : MonoBehaviour {
 	void Start () {
 		
 	}
+
+    void TurnAround()
+    {
+        transform.localScale = new Vector3(transform.localScale.x == 1 ? -1 : 1, 1, 1);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -23,7 +28,15 @@ public class LookForward : MonoBehaviour {
 
         if (collision == needsCollision)
         {
-            transform.localScale = new Vector3(transform.localScale.x == 1 ? -1 : 1, 1, 1);
+            TurnAround();
         }
 	}
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Deadly")
+        {
+            TurnAround();
+        }
+    }
 }
