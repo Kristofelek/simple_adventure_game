@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Game/Scenes/SplashScene.unity
+    guid: 549926c130a58f54897b2815fed1a860
+  - enabled: 1
+    path: Assets/Game/Scenes/Sandbox.unity
+    guid: ab6af4b970b7c56499ddb986fdfc8f9a
